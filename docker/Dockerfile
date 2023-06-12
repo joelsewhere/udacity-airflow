@@ -49,6 +49,7 @@ RUN chmod +x /entrypoint.sh
 EXPOSE 8080 5555 8793
 
 USER airflow
+RUN chmod o+w ${AIRFLOW_USER_HOME}
 WORKDIR ${AIRFLOW_USER_HOME}
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["local-runner"]
