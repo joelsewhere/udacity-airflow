@@ -22,6 +22,7 @@ ENV AIRFLOW_HOME=${AIRFLOW_USER_HOME}
 ENV PATH="$PATH:/usr/local/airflow/.local/bin:/root/.local/bin:/usr/local/airflow/.local/lib/python3.10/site-packages"
 ENV PYTHON_VERSION=3.10.9
 
+COPY script/validate_workspace.sh /validate_workspace.sh
 COPY script/bootstrap.sh /bootstrap.sh
 COPY script/systemlibs.sh /systemlibs.sh
 COPY script/generate_key.sh /generate_key.sh
