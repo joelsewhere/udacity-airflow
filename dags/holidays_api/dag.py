@@ -1,7 +1,7 @@
 # Airflow Imports
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from airflow.providers.sqlite.operators.sqlite import SqliteOperator
+from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 # Job imports
 from holidays_api.source import get_country_code, collect_public_holidays
@@ -26,16 +26,18 @@ with DAG(
         python_callable=collect_public_holidays,
         )
 
-    create_table = SqliteOperator(
+    create_table = PostgresOperator(
         task_id="create_table",
+        postgres_conn_id='postgres_holidays',
         sql="create_holidays.sql",
         params={
             "table": "public_holidays"
             },
         )
 
-    insert_data = SqliteOperator(
+    insert_data = PostgresOperator(
         task_id='insert_data',
+        postgres_conn_id='postgres_holidays',
         sql='insert_holidays.sql',
         params={
             "table": 'public_holidays',

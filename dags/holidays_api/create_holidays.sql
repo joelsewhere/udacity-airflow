@@ -1,5 +1,5 @@
-create table if not exists {{ params["table"] }} (
-    "date"         datetime,
+create table if not exists holidays.{{ params["table"] }} (
+    "date"         date,
     "localName"    varchar(400),
     "name"         varchar(400),
     "countryCode"  varchar(400),

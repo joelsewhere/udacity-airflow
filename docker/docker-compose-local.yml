@@ -12,9 +12,16 @@ services:
                 max-file: "3"
         volumes:
             - "${PWD}/db-data:/var/lib/postgresql/data"
+        expose:
+            - "5439"
+        ports:
+            - "5439:5439"
+        command: -p 5439
+
+
 
     local-runner:
-        image: amazon/mwaa-local:2_5
+        image: amazon/mwaa-local:2_5_udacity
         restart: always
         depends_on:
             - postgres

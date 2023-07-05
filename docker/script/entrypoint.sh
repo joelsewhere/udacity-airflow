@@ -58,6 +58,7 @@ wait_for_port() {
       exit 1
     fi
     echo "$(date) - waiting for $name... $j/$TRY_LOOP"
+    echo "name=$name host=$host port=$port"
     sleep 5
   done
 }
@@ -81,7 +82,7 @@ if [ "$AIRFLOW__CORE__EXECUTOR" != "SequentialExecutor" ]; then
   if [ -z "$AIRFLOW__CORE__SQL_ALCHEMY_CONN" ]; then
     # Default values corresponding to the default compose files
     : "${POSTGRES_HOST:="postgres"}"
-    : "${POSTGRES_PORT:="5432"}"
+    : "${POSTGRES_PORT:="5439"}"
     : "${POSTGRES_USER:="airflow"}"
     : "${POSTGRES_PASSWORD:="airflow"}"
     : "${POSTGRES_DB:="airflow"}"
@@ -129,6 +130,11 @@ case "$1" in
     source stored_env
     export AIRFLOW_HOME="/usr/local/airflow"
     export AIRFLOW__CORE__LOAD_EXAMPLES="False"
+    export PGPASSWORD=airflow
+    psql -U airflow -h postgres -p 5439 -c 'create database holidays;'
+    psql -U airflow -h postgres -p 5439 -c 'create database weather;'
+    psql -U airflow -h postgres -p 5439 -d holidays -c 'create schema holidays;'
+    psql -U airflow -h postgres -p 5439 -d weather -c 'create schema weather;'
 
     install_requirements
     airflow db init
@@ -139,6 +145,7 @@ case "$1" in
     fi
     airflow users create -r Admin -u admin -e admin@example.com -f admin -l user -p $DEFAULT_PASSWORD
     exec airflow webserver
+    airflow dags trigger setup_db
     ;;
   resetdb)
     airflow db reset -y
