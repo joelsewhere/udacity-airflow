@@ -89,6 +89,8 @@ yum install -y unixODBC-devel
 # install additional python dependencies
 if [ -n "${PYTHON_DEPS}" ]; then sudo -u airflow pip3 install $PIP_OPTION "${PYTHON_DEPS}"; fi
 
+yum install -y libxslt-devel libxml2-devel
+
 MWAA_BASE_PROVIDERS_FILE=/mwaa-base-providers-requirements.txt
 echo "Installing providers supported for airflow version ${AIRFLOW_VERSION}"
 sudo -u airflow pip3 install $PIP_OPTION -r $MWAA_BASE_PROVIDERS_FILE
