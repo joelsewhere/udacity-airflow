@@ -8,15 +8,15 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
 def get_country_code(ds, ti, **kwargs):
 
     query = f"""
-    
+
     SELECT * 
     FROM holidays.country_selection
     WHERE date = '{ds}';
-    
+
     """
 
     hook = PostgresHook(postgres_conn_id='postgres_holidays')
-    df = hook.get_pandas_df(query).astype(str)
+    df = hook.get_pandas_df(query)
     print(df.iloc[0])
     country = df.countryCode[0]
     ti.xcom_push(key="country_code", value=country)

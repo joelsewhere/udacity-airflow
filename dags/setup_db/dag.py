@@ -6,23 +6,21 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 
-
 def setup_db(**kwargs):
-    root = 'https://date.nager.at'
-    endpoint = '/api/v3/AvailableCountries'
-    countries = get(root + endpoint)
-    json = countries.json()
+    url = 'https://pokeapi.co/api/v2/type/'
+    results = get(url).json()['results']
+    types = [x['name'] for x in results]
     start=datetime(2023, 7, 4)
     end=datetime(2080, 7, 4)
-    dates = pd.date_range(start=start, end=end)
-    data = [dict(date=date, **choice(json)) for date in dates]
+    dates = pd.date_range(start=start, end=end, freq="D")
+    data = [dict(date=date, type=choice(types)) for date in dates]
     df = pd.DataFrame(data)
     print(df.head())
-    hook = PostgresHook(postgres_conn_id="postgres_holidays")
+    hook = PostgresHook(postgres_conn_id="postgres_pokemon")
     engine = hook.get_sqlalchemy_engine()
     conn = engine.connect()
     print(type(conn))
-    df.to_sql('country_selection', conn, schema='holidays', index=False)
+    df.to_sql('daily_type', conn, schema='pokemon', index=False)
     conn.close()
 
 

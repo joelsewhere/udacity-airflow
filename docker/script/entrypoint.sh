@@ -131,9 +131,9 @@ case "$1" in
     export AIRFLOW_HOME="/usr/local/airflow"
     export AIRFLOW__CORE__LOAD_EXAMPLES="False"
     export PGPASSWORD=airflow
-    psql -U airflow -h postgres -p 5439 -c 'create database holidays;'
+    psql -U airflow -h postgres -p 5439 -c 'create database pokemon;'
     psql -U airflow -h postgres -p 5439 -c 'create database weather;'
-    psql -U airflow -h postgres -p 5439 -d holidays -c 'create schema holidays;'
+    psql -U airflow -h postgres -p 5439 -d pokemon -c 'create schema pokemon;'
     psql -U airflow -h postgres -p 5439 -d weather -c 'create schema weather;'
 
     install_requirements

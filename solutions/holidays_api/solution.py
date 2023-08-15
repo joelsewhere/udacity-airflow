@@ -4,7 +4,7 @@ from airflow.operators.python import PythonOperator
 from airflow.providers.postgres.operators.postgres import PostgresOperator
 
 # Job imports
-from holidays_api.source import get_country_code, collect_public_holidays
+from solutions.holidays_api.solution_src import get_country_code, collect_public_holidays
 
 # Other dependencies
 from datetime import datetime
@@ -12,7 +12,7 @@ from datetime import datetime
 
 with DAG(
     dag_id="holidays_api",
-    schedule="@daily",
+    schedule="@yearly",
     start_date=datetime(2023, 5, 21)
     ) as dag:
     
